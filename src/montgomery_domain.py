@@ -26,7 +26,7 @@ class MontgomeryDomain:
 
         return old_x, old_y
 
-    def _redc(self, T: int) -> int:
+    def redc(self, T: int) -> int:
         m = ((T & (self.R - 1)) * self.n_prime) & (self.R - 1)  #((T mod R) * n_prime) mod R, gdzie 'mod R' to będzie ucięcie do k-bitów
         t = (T + (m * self.N)) >> self.k                        #(T + m * N) / R, gdzie dzielenie to przesunięcie bitowe w prawo o k pozycji
 
@@ -35,7 +35,7 @@ class MontgomeryDomain:
         return t
 
     def to_domain(self, num: int) -> int:
-        return self._redc(num * self.R2)
+        return self.redc(num * self.R2)
 
     def from_domain(self, num: int) -> int:
-        return self._redc(num)
+        return self.redc(num)
