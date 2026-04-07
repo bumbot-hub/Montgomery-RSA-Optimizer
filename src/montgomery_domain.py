@@ -1,9 +1,9 @@
 from typing import Tuple
 
 class MontgomeryDomain:
-    def __init__(self, N: int):
-        self.N = N
-        self.k = N.bit_length()
+    def __init__(self, n: int):
+        self.N = n
+        self.k = self.N.bit_length()
         self.R = 1 << self.k    # Używamy przesunięcia bitowego zamiast obliczania R logarytmem który zwraca float
         self.R2 = (self.R**2) % self.N
 
