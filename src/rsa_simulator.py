@@ -12,18 +12,19 @@ class RSASimulator:
         self.n = n
 
     def encrypt(self, message_int: int):
-        """Szyfrowanie: C = M^e mod N przy użyciu Montgomery'ego"""
+        # Cyphering: C = M^e (mod N) using Montgomery's
         return self.multiplier.power(message_int, self.e)
 
     def decrypt(self, ciphertext_int: int):
-        """Deszyfrowanie: M = C^d mod N przy użyciu Montgomery'ego"""
+        # Deciphering: M=C^d (mod N) using Montgomery's
         return self.multiplier.power(ciphertext_int, self.d)
 
     def text_to_int(self, text: str) -> int:
-        # Zamiana stringa na bajty, a potem na jedną wielką liczbę
+        # Changing string to bits, then into one big number
         return int.from_bytes(text.encode('utf-8'), byteorder='big')
 
     def int_to_text(self, number: int) -> str:
-        # Zamiana wielkiej liczby z powrotem na tekst
+        # Changing big number back into text
         byte_count = (number.bit_length() + 7) // 8
+
         return number.to_bytes(byte_count, byteorder='big').decode('utf-8')
