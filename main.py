@@ -2,6 +2,26 @@ from src.rsa_simulator import RSASimulator
 from sympy import mod_inverse
 import math
 
+def run_diagnostics(rsa):
+    print("\n[DIAGNOSTYKA] Uruchamianie testów przypadków brzegowych...")
+    
+    # Testing "weird" numbers: zero, one and max possible message (N-1)
+    test_cases = [
+        ("Wiadomość M = 0", 0),
+        ("Wiadomość M = 1", 1),
+        ("Wiadomość M = N-1 (Maksymalna)", rsa.n - 1)
+    ]
+    
+    for name, val in test_cases:
+        try:
+            enc = rsa.encrypt(val)
+            dec = rsa.decrypt(enc)
+            status = "SUKCES" if dec == val else "BŁĄD WYNIKU"
+            print(f" > {name:<35} -> {status}")
+        except Exception as e:
+            print(f" > {name:<35} -> BŁĄD KRYTYCZNY ({e})")
+    print("-" * 55)
+
 def main():
     # Generating the RSA parameters
     p = 1000003     # First prime number
@@ -24,7 +44,10 @@ def main():
     print(f"Moduł ma {N.bit_length()} bitów\n")
 
     rsa = RSASimulator(N, E, D)
+    rsa.multiplier.estimate_hardware_cost(N.bit_length())
+    run_diagnostics(rsa)
     text = "Hello"
+
     M = rsa.text_to_int(text)
 
     print(f"Przykładowy tekst: '{text}' \n")
