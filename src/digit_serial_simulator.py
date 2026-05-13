@@ -1,12 +1,12 @@
 from src.montgomery_domain import MontgomeryDomain
 
-# Class that handles the simulation of the digital-series mechanism
+# Hardware-accurate simulator of a Radix-2 Digit-Serial architecture
 class DigitSerialSimulator:
     # Constructor 
     def __init__(self, domain: MontgomeryDomain):
         self.domain = domain    # Creating a Montgomery domain
 
-    # Multiplication to get teh T
+    # Computes the intermediate product T before Montgomery reduction
     def multiply(self, A: int, B: int) -> int:
         T = A * B   # Numbers must be in a domain
         return self.domain.redc(T)
@@ -37,7 +37,7 @@ class DigitSerialSimulator:
                 s += b_bar
 
             # Montgomery's reduction in every step (bit REDC)
-            # Checking LSB of accumulator - if its 1, add N, to make S even
+            # Checking LSB of the accumulator; if odd, add modulus N to ensure divisibility by 2
             if s & 1:
                 s += n
             # shift 1 bit right (To not use division by R)
@@ -48,3 +48,23 @@ class DigitSerialSimulator:
             s -= n
 
         return s
+    
+    # Checking how much hardware will be used
+    def estimate_hardware_cost(self, key_size: int):
+        # In Radix-2 architecture we need registers for A, B, N and accumulator S.
+        flip_flops = 4 * key_size 
+        
+        # Serial multiplication bit by bit requires exactly 'k' clock cycles
+        cycles_per_mult = key_size
+        
+        # Exponentiation Square-and-Multiply requires 1.5 * k multiplications on average
+        avg_mults_per_exp = int(1.5 * key_size)
+        
+        total_cycles = cycles_per_mult * avg_mults_per_exp
+
+        print(f"\n--- Estymacja sprzętowa (klucz {key_size}-bitowy) ---")
+        print(f"Architektura: Digit-Serial Radix-2")
+        print(f"Wymagane rejestry (Przerzutniki FF): ~{flip_flops}")
+        print(f"Cykle zegara na jedno mnożenie REDC: {cycles_per_mult}")
+        print(f"Średnia l. cykli na pełne potęgowanie RSA: ~{total_cycles}")
+        print("-" * 55)
