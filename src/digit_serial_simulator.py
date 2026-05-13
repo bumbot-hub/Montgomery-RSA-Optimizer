@@ -1,12 +1,12 @@
 from src.montgomery_domain import MontgomeryDomain
 
-# Class that handles the simulation of the digital-series mechanism
+# Hardware-accurate simulator of a Radix-2 Digit-Serial architecture
 class DigitSerialSimulator:
     # Constructor 
     def __init__(self, domain: MontgomeryDomain):
         self.domain = domain    # Creating a Montgomery domain
 
-    # Multiplication to get teh T
+    # Computes the intermediate product T before Montgomery reduction
     def multiply(self, A: int, B: int) -> int:
         T = A * B   # Numbers must be in a domain
         return self.domain.redc(T)
@@ -37,7 +37,7 @@ class DigitSerialSimulator:
                 s += b_bar
 
             # Montgomery's reduction in every step (bit REDC)
-            # Checking LSB of accumulator - if its 1, add N, to make S even
+            # Checking LSB of the accumulator; if odd, add modulus N to ensure divisibility by 2
             if s & 1:
                 s += n
             # shift 1 bit right (To not use division by R)

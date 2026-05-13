@@ -1,12 +1,12 @@
 from typing import Tuple
 
-# Class that handles the logic of the Montgomery domain
+# Encapsulates the mathematical logic and constants of the Montgomery domain
 class MontgomeryDomain:
     # The constructor of the class
     def __init__(self, n: int):
         self.N = n                      # The base module
         self.k = self.N.bit_length()    # The power of the domain module (got from the length of 'n' bits)
-        self.R = 1 << self.k            # calculating the domain module by using bitwise shift 'n' times
+        self.R = 1 << self.k            # Computing domain base R = 2^k using bitwise left shift
         self.R2 = (self.R**2) % self.N  # Calculating R2 to easier the way to enter the domain
 
         # Calculation of constants.

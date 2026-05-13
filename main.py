@@ -53,11 +53,6 @@ def main():
     print(f"Przykładowy tekst: '{text}' \n")
     print(f"M (tekst jako liczba): {M}")
 
-    # Checking if text in bits is smaller than N
-    if M >= N:
-        print("Tekst zbyt długi dla podanego N!")
-        return
-
     # Cyphering the text in bit form
     c = rsa.encrypt(M)
     print(f"Szyfrogram (zaszyfrowane M): {c}\n")

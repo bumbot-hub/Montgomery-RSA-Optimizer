@@ -12,7 +12,9 @@ class RSASimulator:
         self.n = n
 
     def encrypt(self, message_int: int):
-        # Cyphering: C = M^e (mod N) using Montgomery's
+        # Performs RSA encryption using Montgomery modular exponentiation
+        if message_int >= self.n:
+            raise ValueError(f"Błąd: Wiadomość M ({message_int}) musi być mniejsza niż moduł N ({self.n})!")
         return self.multiplier.power(message_int, self.e)
 
     def decrypt(self, ciphertext_int: int):
@@ -20,7 +22,7 @@ class RSASimulator:
         return self.multiplier.power(ciphertext_int, self.d)
 
     def text_to_int(self, text: str) -> int:
-        # Changing string to bits, then into one big number
+       # Converts a UTF-8 plaintext string into a Big-Endian large integer
         return int.from_bytes(text.encode('utf-8'), byteorder='big')
 
     def int_to_text(self, number: int) -> str:
